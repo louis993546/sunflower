@@ -26,4 +26,7 @@
     <color name="sunflower_white">#deffffff</color>
     <color name="sunflower_yellow_300">#f8f99f</color>
     <color name="sunflower_yellow_500">#ffff63</color>
+
+    <color name="color_split_content_background">#3B6BDB4C</color>
+    <color name="color_split_controls_background">#475ABFF3</color>
 </resources>
