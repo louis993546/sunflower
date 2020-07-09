@@ -24,12 +24,14 @@
         android:id="@+id/my_garden_fragment"
         android:name="com.google.samples.apps.sunflower.TabletPlantDetailFragment"
         android:label="@string/my_garden_title"
-        tools:layout="@layout/fragment_tablet_plant_detail"/>
+        tools:layout="@layout/fragment_tablet_plant_detail">
+    </fragment>
 
     <fragment
         android:id="@+id/plant_list_fragment"
         android:name="com.google.samples.apps.sunflower.TabletPlantDetailFragment"
-        android:label="@string/my_garden_title"
-        tools:layout="@layout/fragment_tablet_plant_detail"/>
+        android:label="@string/plant_list_title"
+        tools:layout="@layout/fragment_tablet_plant_detail">
+    </fragment>
 
 </navigation>

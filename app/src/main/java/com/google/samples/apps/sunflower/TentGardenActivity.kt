@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,56 +19,37 @@ package com.google.samples.apps.sunflower
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.Consumer
 import androidx.databinding.DataBindingUtil.setContentView
-import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
 import androidx.window.DeviceState
-import androidx.window.WindowLayoutInfo
 import androidx.window.WindowManager
-import com.google.samples.apps.sunflower.databinding.ActivityGardenBinding
-import kotlinx.android.synthetic.main.activity_garden.*
+import com.google.android.material.snackbar.Snackbar
+import com.google.samples.apps.sunflower.data.Plant
+import com.google.samples.apps.sunflower.databinding.ActivityTentGardenBinding
 import java.util.concurrent.Executor
 
-class GardenActivity : AppCompatActivity() {
+class TentGardenActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val mainThreadExecutor = Executor { r: Runnable -> handler.post(r) }
     lateinit var windowManager: WindowManager
 
     private val deviceStateChangeCallback: Consumer<DeviceState> = DeviceStateChangeCallback()
-    private val layoutStateChangeCallback: Consumer<WindowLayoutInfo> = LayoutStateChangeCallback()
 
-    var onDeviceStateChange: (DeviceState) -> Unit = {}
-    var onLayoutStateChange: (WindowLayoutInfo) -> Unit = {}
+    private lateinit var binding: ActivityTentGardenBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView<ActivityGardenBinding>(this, R.layout.activity_garden)
-        setupViews()
+        binding = setContentView(this, R.layout.activity_tent_garden)
+        val plant = intent?.extras?.getParcelable<Plant>("plant")
+        plant?.run { binding.plant = this }
 
         windowManager = WindowManager(this, null)
         windowManager.registerDeviceStateChangeCallback(
             mainThreadExecutor,
             deviceStateChangeCallback
         )
-    }
-
-    private fun setupViews() {
-        bottom_navigation?.run {
-            val navController = findNavController(R.id.nav_host)
-            setupWithNavController(navController)
-        }
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        windowManager.registerLayoutChangeCallback(mainThreadExecutor, layoutStateChangeCallback)
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        windowManager.unregisterLayoutChangeCallback(layoutStateChangeCallback)
     }
 
     override fun onDestroy() {
@@ -78,13 +59,9 @@ class GardenActivity : AppCompatActivity() {
 
     private inner class DeviceStateChangeCallback : Consumer<DeviceState> {
         override fun accept(newDeviceState: DeviceState) {
-            onDeviceStateChange(newDeviceState)
-        }
-    }
-
-    private inner class LayoutStateChangeCallback : Consumer<WindowLayoutInfo> {
-        override fun accept(newLayoutInfo: WindowLayoutInfo) {
-            onLayoutStateChange(newLayoutInfo)
+            Snackbar.make(binding.root, "Want to back to normal mode?", Snackbar.LENGTH_LONG)
+                .setAction("Yes") { finish() }
+                .show()
         }
     }
 }

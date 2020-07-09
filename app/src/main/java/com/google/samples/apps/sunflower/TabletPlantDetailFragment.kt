@@ -16,18 +16,20 @@
 
 package com.google.samples.apps.sunflower
 
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.util.Consumer
+import androidx.core.os.bundleOf
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
-import androidx.window.WindowLayoutInfo
+import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
+import androidx.window.DeviceState
+import com.google.samples.apps.sunflower.data.Plant
 import com.google.samples.apps.sunflower.databinding.FragmentTabletPlantDetailBinding
 import com.google.samples.apps.sunflower.utilities.InjectorUtils
 import com.google.samples.apps.sunflower.viewmodels.TabletPlantDetailViewModel
@@ -37,13 +39,11 @@ class TabletPlantDetailFragment : Fragment() {
         InjectorUtils.provideTabletPlantDetailViewModelFactory(this)
     }
 
-    private val layoutStateChangeCallback = LayoutStateChangeCallback()
     private var _binding: FragmentTabletPlantDetailBinding? = null
     private val binding
         get() = _binding!!
 
-    private val gardenActivity
-        get() = activity as GardenActivity
+    private lateinit var currentPlant: Plant
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,9 +54,21 @@ class TabletPlantDetailFragment : Fragment() {
         binding.viewModel = tabletPlantDetailViewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.root.doOnLayout {
-            binding.splitLayout.updateWindowLayout(gardenActivity.windowManager.windowLayoutInfo)
+            binding.splitLayout.updateWindowLayout(getGardenActivity().windowManager.windowLayoutInfo)
         }
-        gardenActivity.layoutStateChangeCallback = layoutStateChangeCallback
+        tabletPlantDetailViewModel.currentPlant.observe(viewLifecycleOwner, Observer {
+            this.currentPlant = it
+        })
+        getGardenActivity().onLayoutStateChange = {
+            binding.splitLayout.updateWindowLayout(it)
+        }
+        getGardenActivity().onDeviceStateChange = { deviceState ->
+            if (deviceState.posture == DeviceState.POSTURE_FLIPPED) {
+                val intent = Intent(context!!, TentGardenActivity::class.java)
+                intent.putExtra("plant", currentPlant)
+                startActivity(intent)
+            }
+        }
         return binding.root
     }
 
@@ -64,10 +76,7 @@ class TabletPlantDetailFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-    inner class LayoutStateChangeCallback : Consumer<WindowLayoutInfo> {
-        override fun accept(t: WindowLayoutInfo) {
-            binding.splitLayout.updateWindowLayout(t)
-        }
-    }
 }
+
+fun Fragment.getGardenActivity() = activity as GardenActivity
+
