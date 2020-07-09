@@ -23,6 +23,7 @@ import android.view.View
 import android.view.View.MeasureSpec.AT_MOST
 import android.view.View.MeasureSpec.EXACTLY
 import android.widget.FrameLayout
+import androidx.databinding.DataBindingUtil
 import androidx.window.DisplayFeature
 import androidx.window.DisplayFeature.TYPE_FOLD
 import androidx.window.DisplayFeature.TYPE_HINGE
@@ -57,10 +58,10 @@ class SplitLayout : FrameLayout {
         requestLayout()
     }
 
-    override fun onFinishInflate() {
-        super.onFinishInflate()
-        contentBinding = SplitLayoutContentBinding.bind(findViewById(R.id.content_layout))
-        controlBinding = SplitLayoutControlBinding.bind(findViewById(R.id.control_layout))
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        contentBinding = DataBindingUtil.findBinding(findViewById(R.id.content_layout))!!
+        controlBinding = DataBindingUtil.findBinding(findViewById(R.id.control_layout))!!
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

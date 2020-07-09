@@ -15,50 +15,59 @@
   ~  * limitations under the License.
   ~  */
   -->
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:minWidth="250dp"
-    android:minHeight="200dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container"
+    <data>
+        <variable
+            name="viewModel"
+            type="com.google.samples.apps.sunflower.viewmodels.TabletPlantDetailViewModel" />
+    </data>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:minWidth="250dp"
+        android:minHeight="200dp">
 
-        <TextView
-            android:id="@+id/plant_detail_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceHeadline5"
-            android:layout_marginStart="@dimen/margin_small"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/plant_watering_header"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:text="@string/watering_needs_prefix"
-            android:textColor="?attr/colorAccent"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/plant_detail_name" />
+            <TextView
+                android:id="@+id/plant_detail_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceHeadline5"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginStart="@dimen/margin_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@{viewModel.currentPlant.name}"/>
 
-        <TextView
-            android:id="@+id/plant_watering"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_small"
-            android:gravity="center_horizontal"
-            app:layout_constraintStart_toEndOf="@id/plant_watering_header"
-            app:layout_constraintBaseline_toBaselineOf="@id/plant_watering_header"
-            tools:text="every 7 days" />
+            <TextView
+                android:id="@+id/plant_watering_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:text="@string/watering_needs_prefix"
+                android:textColor="?attr/colorAccent"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/plant_detail_name"
+                app:layout_constraintTop_toBottomOf="@id/plant_detail_name" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+            <TextView
+                android:id="@+id/plant_watering"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
+                android:gravity="center_horizontal"
+                app:layout_constraintStart_toEndOf="@id/plant_watering_header"
+                app:layout_constraintBaseline_toBaselineOf="@id/plant_watering_header"
+                tools:text="every 7 days" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

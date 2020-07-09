@@ -51,23 +51,13 @@ class TabletPlantDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentTabletPlantDetailBinding.inflate(inflater, container, false)
+        binding.viewModel = tabletPlantDetailViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.root.doOnLayout {
             binding.splitLayout.updateWindowLayout(gardenActivity.windowManager.windowLayoutInfo)
         }
         gardenActivity.layoutStateChangeCallback = layoutStateChangeCallback
-
-        subscribeUi()
-        binding.fab.setOnClickListener {
-
-        }
-
         return binding.root
-    }
-
-    private fun subscribeUi() {
-        tabletPlantDetailViewModel.currentPlant.observe(viewLifecycleOwner) {
-            Log.d("qqq", it.toString())
-        }
     }
 
     override fun onDestroyView() {

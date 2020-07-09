@@ -15,14 +15,24 @@
   ~  * limitations under the License.
   ~  */
   -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/detail_image"
+    <data>
+        <variable
+            name="viewModel"
+            type="com.google.samples.apps.sunflower.viewmodels.TabletPlantDetailViewModel" />
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_my_garden_active"
-        android:scaleType="centerCrop" />
-</FrameLayout>
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/detail_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:imageFromUrl="@{viewModel.currentPlant.imageUrl}"
+            android:scaleType="centerCrop" />
+    </FrameLayout>
+</layout>
