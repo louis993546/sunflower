@@ -24,6 +24,7 @@ import com.google.samples.apps.sunflower.data.PlantRepository
 import com.google.samples.apps.sunflower.viewmodels.GardenPlantingListViewModelFactory
 import com.google.samples.apps.sunflower.viewmodels.PlantDetailViewModelFactory
 import com.google.samples.apps.sunflower.viewmodels.PlantListViewModelFactory
+import com.google.samples.apps.sunflower.viewmodels.TabletPlantDetailViewModelFactory
 
 /**
  * Static methods used to inject classes needed for various Activities and Fragments.
@@ -47,7 +48,10 @@ object InjectorUtils {
     }
 
     fun providePlantListViewModelFactory(fragment: Fragment): PlantListViewModelFactory {
-        return PlantListViewModelFactory(getPlantRepository(fragment.requireContext()), fragment)
+        return PlantListViewModelFactory(
+            repository = getPlantRepository(fragment.requireContext()),
+            owner = fragment
+        )
     }
 
     fun providePlantDetailViewModelFactory(
@@ -57,4 +61,11 @@ object InjectorUtils {
         return PlantDetailViewModelFactory(getPlantRepository(context),
                 getGardenPlantingRepository(context), plantId)
     }
+
+    fun provideTabletPlantDetailViewModelFactory(
+        fragment: Fragment
+    ): TabletPlantDetailViewModelFactory = TabletPlantDetailViewModelFactory(
+        repository = getPlantRepository(fragment.requireContext()),
+        owner = fragment
+    )
 }

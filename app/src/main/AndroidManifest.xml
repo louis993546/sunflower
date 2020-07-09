@@ -30,7 +30,8 @@
         android:theme="@style/Theme.Sunflower">
         <activity
             android:name=".GardenActivity"
-            android:theme="@style/Theme.Sunflower.NoActionBar">
+            android:theme="@style/Theme.Sunflower.NoActionBar"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

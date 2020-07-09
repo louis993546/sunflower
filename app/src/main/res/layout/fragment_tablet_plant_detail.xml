@@ -13,15 +13,16 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.google.samples.apps.sunflower.utilities.SplitLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/split_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,12 +30,21 @@
 
         <include
             android:id="@+id/content_layout"
-            layout="@layout/split_layout_content"/>
+            layout="@layout/split_layout_content" />
 
         <include
             android:id="@+id/control_layout"
-            layout="@layout/split_layout_control"/>
+            layout="@layout/split_layout_control" />
 
     </com.google.samples.apps.sunflower.utilities.SplitLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_plus"
+        android:layout_margin="@dimen/fab_margin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

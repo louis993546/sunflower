@@ -24,6 +24,7 @@ android {
     compileSdkVersion rootProject.compileSdkVersion
     buildFeatures {
         dataBinding = true
+        viewBinding = true
     }
     defaultConfig {
         applicationId "com.google.samples.apps.sunflower"
@@ -47,9 +48,6 @@ android {
     // work-runtime-ktx 2.1.0 and above now requires Java 8
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-    buildFeatures {
-        viewBinding true
     }
 }
 
