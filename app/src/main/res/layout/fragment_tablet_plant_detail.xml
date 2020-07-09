@@ -22,11 +22,7 @@
     <com.google.samples.apps.sunflower.utilities.SplitLayout
         android:id="@+id/split_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_height="match_parent">
 
         <include
             android:id="@+id/content_layout"

@@ -18,17 +18,16 @@ package com.google.samples.apps.sunflower
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.core.util.Consumer
+import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.window.WindowLayoutInfo
+import com.google.samples.apps.sunflower.databinding.FragmentTabletPlantDetailBinding
 import com.google.samples.apps.sunflower.utilities.InjectorUtils
-import com.google.samples.apps.sunflower.utilities.SplitLayout
 import com.google.samples.apps.sunflower.viewmodels.TabletPlantDetailViewModel
 
 class TabletPlantDetailFragment : Fragment() {
@@ -36,33 +35,35 @@ class TabletPlantDetailFragment : Fragment() {
         InjectorUtils.provideTabletPlantDetailViewModelFactory(this)
     }
 
-    private lateinit var splitLayout: SplitLayout
-    private lateinit var image: ImageView
-    private lateinit var name: TextView
-    private lateinit var watering: TextView
-    private lateinit var description: TextView
-    private lateinit var fab: FloatingActionButton
+    private val layoutStateChangeCallback = LayoutStateChangeCallback()
+    private var _binding: FragmentTabletPlantDetailBinding? = null
+    private val binding
+        get() = _binding!!
+
+    private val gardenActivity
+        get() = activity as GardenActivity
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_tablet_plant_detail, container, false)
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (context as GardenActivity).setCallback { newWindowLayoutInfo ->
-            splitLayout.updateWindowLayout(newWindowLayoutInfo)
+    ): View? {
+        _binding = FragmentTabletPlantDetailBinding.inflate(inflater, container, false)
+        binding.root.doOnLayout {
+            binding.splitLayout.updateWindowLayout(gardenActivity.windowManager.windowLayoutInfo)
         }
+        gardenActivity.layoutStateChangeCallback = layoutStateChangeCallback
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        splitLayout = view.findViewById(R.id.split_layout)
-        image = splitLayout.findViewById(R.id.detail_image)
-        name = splitLayout.findViewById(R.id.plant_detail_name)
-        watering = splitLayout.findViewById(R.id.plant_watering)
-        description = splitLayout.findViewById(R.id.plant_description)
-        fab = view.findViewById(R.id.fab)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    inner class LayoutStateChangeCallback : Consumer<WindowLayoutInfo> {
+        override fun accept(t: WindowLayoutInfo) {
+            binding.splitLayout.updateWindowLayout(t)
+        }
     }
 }

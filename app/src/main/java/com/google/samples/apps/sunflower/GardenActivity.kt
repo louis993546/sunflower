@@ -19,13 +19,13 @@ package com.google.samples.apps.sunflower
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.Consumer
-import androidx.core.view.doOnLayout
 import androidx.databinding.DataBindingUtil.setContentView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.window.DeviceState
 import androidx.window.WindowLayoutInfo
 import androidx.window.WindowManager
 import com.google.samples.apps.sunflower.databinding.ActivityGardenBinding
@@ -35,25 +35,22 @@ import java.util.concurrent.Executor
 class GardenActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val mainThreadExecutor = Executor { r: Runnable -> handler.post(r) }
-    private val layoutStateChangeCallback = LayoutStateChangeCallback()
-
-    inner class LayoutStateChangeCallback : Consumer<WindowLayoutInfo> {
-        override fun accept(newLayoutInfo: WindowLayoutInfo) {
-            callback(newLayoutInfo)
-        }
-    }
-
     lateinit var windowManager: WindowManager
 
-    private lateinit var callback: (WindowLayoutInfo) -> Unit
+    var layoutStateChangeCallback: Consumer<WindowLayoutInfo> = LayoutStateChangeCallback()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView<ActivityGardenBinding>(this, R.layout.activity_garden)
         setupViews()
+
         windowManager = WindowManager(this, null)
-        findViewById<View>(android.R.id.content).rootView.doOnLayout {
-            callback(windowManager.windowLayoutInfo)
+    }
+
+    private fun setupViews() {
+        bottom_navigation?.run {
+            val navController = findNavController(R.id.nav_host)
+            setupWithNavController(navController)
         }
     }
 
@@ -67,14 +64,9 @@ class GardenActivity : AppCompatActivity() {
         windowManager.unregisterLayoutChangeCallback(layoutStateChangeCallback)
     }
 
-    fun setCallback(callback: (WindowLayoutInfo) -> Unit) {
-        this.callback = callback
-    }
-
-    private fun setupViews() {
-        bottom_navigation?.run {
-            val navController = findNavController(R.id.nav_host)
-            setupWithNavController(navController)
+    inner class LayoutStateChangeCallback : Consumer<WindowLayoutInfo> {
+        override fun accept(newLayoutInfo: WindowLayoutInfo) {
+            Log.w("qqq", "no one is consuming these changes so far")
         }
     }
 }

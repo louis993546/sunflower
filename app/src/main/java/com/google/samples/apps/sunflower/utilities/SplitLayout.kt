@@ -162,10 +162,6 @@ class SplitLayout : FrameLayout {
     }
 }
 
-/**
- * Get the bounds of the display feature translated to the View's coordinate space and current
- * position in the window. This will also include view padding in the calculations.
- */
 fun getFeatureBoundsInWindow(
     displayFeature: DisplayFeature,
     view: View,
