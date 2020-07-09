@@ -66,6 +66,7 @@ object InjectorUtils {
         fragment: Fragment
     ): TabletPlantDetailViewModelFactory = TabletPlantDetailViewModelFactory(
         repository = getPlantRepository(fragment.requireContext()),
+        gardenPlantingRepository = getGardenPlantingRepository(fragment.requireContext()),
         owner = fragment
     )
 }

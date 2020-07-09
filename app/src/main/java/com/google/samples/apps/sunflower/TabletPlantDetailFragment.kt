@@ -18,6 +18,7 @@ package com.google.samples.apps.sunflower
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ import androidx.core.util.Consumer
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.window.WindowLayoutInfo
 import com.google.samples.apps.sunflower.databinding.FragmentTabletPlantDetailBinding
 import com.google.samples.apps.sunflower.utilities.InjectorUtils
@@ -53,7 +55,19 @@ class TabletPlantDetailFragment : Fragment() {
             binding.splitLayout.updateWindowLayout(gardenActivity.windowManager.windowLayoutInfo)
         }
         gardenActivity.layoutStateChangeCallback = layoutStateChangeCallback
+
+        subscribeUi()
+        binding.fab.setOnClickListener {
+
+        }
+
         return binding.root
+    }
+
+    private fun subscribeUi() {
+        tabletPlantDetailViewModel.currentPlant.observe(viewLifecycleOwner) {
+            Log.d("qqq", it.toString())
+        }
     }
 
     override fun onDestroyView() {

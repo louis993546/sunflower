@@ -19,20 +19,32 @@ package com.google.samples.apps.sunflower.viewmodels
 import android.os.Bundle
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
+import com.google.samples.apps.sunflower.data.GardenPlantingRepository
+import com.google.samples.apps.sunflower.data.Plant
 import com.google.samples.apps.sunflower.data.PlantRepository
+import kotlinx.coroutines.launch
 
 class TabletPlantDetailViewModel constructor(
-    val plantRepository: PlantRepository
+    private val plantRepository: PlantRepository,
+    private val gardenPlantingRepository: GardenPlantingRepository
 ) : ViewModel() {
+    private val _currentPlant = MutableLiveData<Plant>()
+    val currentPlant: LiveData<Plant>
+        get() = plants.map { it.first() }
 
+    private val plants = plantRepository.getPlants()
 }
 
 class TabletPlantDetailViewModelFactory(
     private val repository: PlantRepository,
+    private val gardenPlantingRepository: GardenPlantingRepository,
     owner: SavedStateRegistryOwner,
     defaultArgs: Bundle? = null
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
@@ -41,5 +53,5 @@ class TabletPlantDetailViewModelFactory(
         key: String,
         modelClass: Class<T>,
         handle: SavedStateHandle
-    ): T = TabletPlantDetailViewModel(repository) as T
+    ): T = TabletPlantDetailViewModel(repository, gardenPlantingRepository) as T
 }
