@@ -35,11 +35,22 @@ class TabletPlantDetailViewModel constructor(
     private val plantRepository: PlantRepository,
     private val gardenPlantingRepository: GardenPlantingRepository
 ) : ViewModel() {
+    val allPlants
+        get() = plantRepository.getPlants()
+
     private val _currentPlant = MutableLiveData<Plant>()
     val currentPlant: LiveData<Plant>
-        get() = plants.map { it.first() }
+        get() = _currentPlant
 
     private val plants = plantRepository.getPlants()
+
+    init {
+        _currentPlant.value = plants.value?.first()
+    }
+
+    fun onPlantClick(plant: Plant) {
+        _currentPlant.value = plant
+    }
 }
 
 class TabletPlantDetailViewModelFactory(
