@@ -18,6 +18,7 @@ package com.google.samples.apps.sunflower.utilities
 
 import android.content.Context
 import androidx.fragment.app.Fragment
+import com.google.samples.apps.sunflower.LaptopGardenViewModelFactory
 import com.google.samples.apps.sunflower.data.AppDatabase
 import com.google.samples.apps.sunflower.data.GardenPlantingRepository
 import com.google.samples.apps.sunflower.data.PlantRepository
@@ -68,5 +69,11 @@ object InjectorUtils {
         repository = getPlantRepository(fragment.requireContext()),
         gardenPlantingRepository = getGardenPlantingRepository(fragment.requireContext()),
         owner = fragment
+    )
+
+    fun provideLaptopGardenViewModelFactory(
+        context: Context
+    ): LaptopGardenViewModelFactory = LaptopGardenViewModelFactory(
+        repository = getPlantRepository(context)
     )
 }

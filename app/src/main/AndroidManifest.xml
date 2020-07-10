@@ -41,6 +41,9 @@
         <activity android:name=".TentGardenActivity"
             android:theme="@style/Theme.Sunflower.NoActionBar"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize"/>
+        <activity android:name=".LaptopGardenActivity"
+            android:theme="@style/Theme.Sunflower.NoActionBar"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize"/>
     </application>
 
 </manifest>

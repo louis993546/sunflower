@@ -17,7 +17,6 @@
 package com.google.samples.apps.sunflower
 
 import android.content.Intent
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,13 +27,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.window.DeviceState
 import com.google.samples.apps.sunflower.adapters.PlantAdapter2
 import com.google.samples.apps.sunflower.data.Plant
 import com.google.samples.apps.sunflower.databinding.FragmentTabletPlantDetailBinding
 import com.google.samples.apps.sunflower.utilities.InjectorUtils
+import com.google.samples.apps.sunflower.utilities.HorizontalSpaceItemDecoration
 import com.google.samples.apps.sunflower.viewmodels.TabletPlantDetailViewModel
 
 class TabletPlantDetailFragment : Fragment() {
@@ -71,17 +69,28 @@ class TabletPlantDetailFragment : Fragment() {
             tabletPlantDetailViewModel.allPlants.observe(viewLifecycleOwner) { plants ->
                 plantAdapter.submitList(plants)
             }
-            addItemDecoration(VerticalSpaceItemDecoration(resources.getDimensionPixelSize(R.dimen.card_side_margin)))
+            addItemDecoration(
+                HorizontalSpaceItemDecoration(
+                    resources.getDimensionPixelSize(R.dimen.card_side_margin)
+                )
+            )
         }
 
         getGardenActivity().onLayoutStateChange = {
             binding.splitLayout.updateWindowLayout(it)
         }
         getGardenActivity().onDeviceStateChange = { deviceState ->
-            if (deviceState.posture == DeviceState.POSTURE_FLIPPED) {
-                val intent = Intent(context!!, TentGardenActivity::class.java)
-                intent.putExtra("plant", currentPlant)
-                startActivity(intent)
+            when (deviceState.posture) {
+                DeviceState.POSTURE_FLIPPED -> {
+                    val intent = Intent(context!!, TentGardenActivity::class.java)
+                    intent.putExtra("plant", currentPlant)
+                    startActivity(intent)
+                }
+                DeviceState.POSTURE_HALF_OPENED -> {
+                    val intent = Intent(context!!, LaptopGardenActivity::class.java)
+                    intent.putExtra("plant", currentPlant)
+                    startActivity(intent)
+                }
             }
         }
         return binding.root
@@ -95,15 +104,3 @@ class TabletPlantDetailFragment : Fragment() {
 
 fun Fragment.getGardenActivity() = activity as GardenActivity
 
-class VerticalSpaceItemDecoration(private val verticalSpaceHeight: Int) : ItemDecoration() {
-    override fun getItemOffsets(
-        outRect: Rect,
-        view: View,
-        parent: RecyclerView,
-        state: RecyclerView.State
-    ) {
-        if (parent.getChildAdapterPosition(view) != parent.adapter!!.itemCount - 1) {
-            outRect.right = verticalSpaceHeight
-        }
-    }
-}
